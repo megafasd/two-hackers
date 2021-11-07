@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <title>project sagip</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.8.0/dist/tf.min.js"></script>
+    <!-- for database query -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="server/pred.js"></script>
+    <script type="text/javascript" src="server/preproc.js"></script>
+    <script type="text/javascript" src="server/mysql.js"></script>
+
+    <style type="text/css" id="stylez">
+        @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap");
+        * {
+            margin: 0;
+            padding: 0;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: #292c33;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav {
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            padding: 20 50px;
+            width: 100%;
+        }
+        
+        nav .logo {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #ec3e3f;
+            font-size: 35px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            overflow: hidden;
+            padding-left: 20px;
+        }
+        
+        nav .nav-items {
+            display: flex;
+            flex: 1;
+            padding: 0 0 0 30px;
+        }
+        
+        nav form {
+            border: 2px solid #ec3e3f;
+            text-align: center;
+            display: flex;
+            height: 40px;
+            padding: 2px;
+            background: #fff;
+            min-width: 18%!important;
+            border-radius: 10px;
+        }
+        
+        nav form .search-data {
+            width: 100%;
+            height: 100%;
+            padding: 0 10px;
+            color: #ec3e3f;
+            font-size: 17px;
+            border: none;
+            font-weight: 500;
+            background: none;
+        }
+        
+        nav form button {
+            padding: 0 15px;
+            color: #ec3e3f;
+            font-size: 17px;
+            background: #fff;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        nav form button:hover {
+            background: #fff;
+        }
+        
+        nav .cancel-icon,
+        nav .search-icon {
+            width: 40px;
+            text-align: center;
+            margin: 0 50px;
+            font-size: 18px;
+            color: #ec3e3f;
+            cursor: pointer;
+            display: none;
+        }
+        
+        nav .cancel-icon,
+        nav .search-icon {
+            width: 40px;
+            text-align: center;
+            margin: 0 50px;
+            font-size: 18px;
+            color: #ec3e3f;
+            cursor: pointer;
+            display: none;
+        }
+        
+        nav .cancel-icon,
+        nav .search-icon {
+            display: none;
+        }
+        
+        @media (max-width: 1300px) {
+            nav {
+                padding: 0 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 20px;
+            }
+            nav .logo {
+                flex: 2;
+                text-align: center;
+                padding: 10px;
+            }
+            @media (max-width: 450px) {
+                nav {
+                    padding: 0 20px;
+                    height: 50px;
+                }
+                nav .logo {
+                    flex: 2;
+                    text-align: center;
+                    font-weight: 600;
+                    font-size: 18px;
+                }
+            }
+
+            @media (max-width: 400px) {
+                nav {
+                    padding: 0 20px;
+                    height: 50px;
+                }
+                nav .logo {
+                    flex: 2;
+                    text-align: center;
+                    font-weight: 600;
+                    font-size: 18px;
+                }
+            }
+            @media (max-width: 280px) {
+                nav {
+                    padding: 0px;
+                    height: 50px;
+                }
+                nav .logo {
+                    flex: 2;
+                    text-align: center;
+                    font-weight: 600;
+                    font-size: 18px;
+                }
+            }
+            nav form {
+                position: absolute;
+                top: 40px;
+                right: 50px;
+                opacity: 0;
+                pointer-events: none;
+                transition: top 0.3s ease, opacity 0.1s ease;
+            }
+            nav form.active {
+                top: 40px;
+                opacity: 1;
+                pointer-events: auto;
+            }
+            nav form:before {
+                position: absolute;
+                content: "";
+                top: -13px;
+                right: 0px;
+                width: 0;
+                height: 0;
+                z-index: -1;
+                border: 10px solid transparent;
+                border-bottom-color: #1e232b;
+                margin: -20px 0 0;
+            }
+            nav form:after {
+                position: absolute;
+                content: '';
+                height: 50px;
+                padding: 2px;
+                background: #1e232b;
+                border-radius: 2px;
+                z-index: -2;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            nav .search-icon {
+                display: block;
+            }
+            nav .search-icon.hide {
+                display: none;
+            }
+            nav .cancel-icon.show {
+                display: block;
+            }
+        }
+        
+        nav .logo.space {
+            color: #ec3e3f;
+            padding: 0 5px 0 0;
+        }
+        
+        @media (max-width: 980px) {
+            nav .cancel-icon,
+            nav .search-icon {
+                margin: 0 20px;
+            }
+            nav form {
+                right: 30px;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            nav .cancel-icon,
+            nav .search-icon {
+                margin: 0 10px;
+                font-size: 16px;
+            }
+        }
+        
+        .table-container {
+            padding: 0 10%;
+            margin: 10px 10px;
+            width: fit-content;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<nav>
+    <div class="menu-icon"><span class=""></span></div>
+    <div class="logo">project sagip</div>
+    <div class="nav-items"></div>
+    <div class="search-icon"><span class="fas fa-search"></span></div>
+    <div class="cancel-icon"><span class="fas fa-times"></span></div>
+    <form action="/set-keyword" method="POST">
+        <input type="text" name="keyword" class="search-data" placeholder="Keyword" required/>
+        <button type="submit" class="fas fa-search" value="Search"></button>
+    </form>
+</nav>
+
+<script>
+    const menuBtn = document.querySelector(".menu-icon span");
+    const searchBtn = document.querySelector(".search-icon");
+    const cancelBtn = document.querySelector(".cancel-icon");
+    const items = document.querySelector(".nav-items");
+    const form = document.querySelector("form");
+    menuBtn.onclick = () => {
+        items.classList.add("active");
+        menuBtn.classList.add("hide");
+        searchBtn.classList.add("hide");
+        cancelBtn.classList.add("show");
+    }
+    cancelBtn.onclick = () => {
+        items.classList.remove("active");
+        menuBtn.classList.remove("hide");
+        searchBtn.classList.remove("hide");
+        cancelBtn.classList.remove("show");
+        form.classList.remove("active");
+        cancelBtn.style.color = "#ff3d00";
+    }
+    searchBtn.onclick = () => {
+        form.classList.add("active");
+        searchBtn.classList.add("hide");
+        cancelBtn.classList.add("show");
+    }
+</script>
+
+<body>
+
+    <div class="container">
+        <div id="tweetStream"></div>
+        <table class="table" id="tibol">
+            <div id="myDiv"></div>
+            <!--for padding-->
+
+
+        </table>
+    </div>
+    <script>
+        const style = document.createElement('style');
+        style.innerHTML = `
+        @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap");
+        *{
+            margin: 0;
+            padding: 0;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            
+        }
+        table, .table, .tibol {
+            font-family: 'Poppins', sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            color: #fff;
+            background-color: #292c33;
+            width: 100%;
+            vertical-align: center;
+            font-size: 18px;
+        }
+
+        .table thead tr th{
+            
+            font-weight: 600;
+            letter-spacing: 0.35px;
+            opacity: 1;
+            padding: 12px;
+            
+        }
+        .table .text_open{
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.35px;
+            color: #ff1046;
+        }
+        .table .tbody tr tr{
+            text-decoration: none;
+            line-height: 35px;
+            display: inline-block;
+            font-weight: medium;
+            color: #fff;
+            text-align: right;
+            vertical-align: middle;
+            user-select: none;
+            font-size: 18px;
+            opacity: 1;
+        }
+        tr:hover{
+           background-color: #292c33;
+           transform: scale(1.02);
+           box-shadow: 2px 2px 12px #ec3e3f, -1px -1px 8px #ec3e3f;;
+       }
+
+    @media only screen and (max-width: 980px)  {
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+        font-size: 15px;
+        vertical-align: center;
+	}
+
+    table, .table, tr{
+        margin-bottom: 15px;
+    }
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; 
+    
+    }
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before { 
+		position: absolute;
+		left: 0px;
+		width: 50%; 
+        padding-left: 15px;
+        font-size: 15px;
+        text-align: center;
+        align: center;
+
+	}
+
+	td:nth-of-type(1):before { content: "User Handle"; padding-top: .6em; }
+	td:nth-of-type(2):before { content: "Tweet"; padding-top: 5px; padding-top: .6em;}
+	td:nth-of-type(3):before { content: "Urgency Score"; padding-top: 5px; padding-top: .6em;}
+	td:nth-of-type(4):before { content: "Geotag"; padding-top: 5px; padding-top: .6em;}
+	td:nth-of-type(5):before { 
+        content: "Tweet Link"; 
+        margin-left: 24%;
+        padding-top: 1.5em;
+        
+        }
+    }
+    `;
+        document.head.appendChild(style); //calling css
+
+        MySql.Execute(
+            "us-cdbr-east-04.cleardb.com",
+            "b17582dc365975",
+            "7ddc3c6c",
+            "heroku_b63e0ce64f4651c",
+            "select * from pstry order by uscore desc",
+
+            function(data) {
+
+                let rows = JSON.parse(JSON.stringify(data, null, 2));
+
+                function tableCreate() {
+                    $("#tibol").empty();
+                    tbl = document.getElementById('tibol');
+                    //tbl.style.tableLayout = "fixed";
+
+                    console.log(tbl);
+                    console.log(rows["Result"].length);
+                    console.log(rows["Result"]);
+                    console.log(rows);
+                    console.log(Object.values(rows).length);
+
+                    document.getElementById("myDiv").style.paddingTop = "30px"; //for top padding
+                    const th = tbl.insertRow();
+
+
+                    const th1 = th.insertCell();
+                    th1.innerHTML = "User Handle";
+                    th1.style.border = '1px solid #fff';
+                    th1.style.backgroundColor = '#465a65';
+
+                    const th2 = th.insertCell();
+                    th2.innerHTML = "Tweet";
+                    th2.style.border = '1px solid #fff';
+                    th2.style.backgroundColor = '#465a65';
+
+                    const th3 = th.insertCell();
+                    th3.innerHTML = "Urgency Score";
+                    th3.style.border = '1px solid #fff';
+                    th3.style.backgroundColor = '#ec3e3f';
+
+                    const th4 = th.insertCell();
+                    th4.innerHTML = "Geotag Location";
+                    th4.style.border = '1px solid #fff';
+                    th4.style.backgroundColor = '#465a65';
+
+                    const th5 = th.insertCell();
+                    th5.innerHTML = "Tweet Link";
+                    th5.style.border = '1px solid #fff';
+                    th5.style.backgroundColor = '#465a65';
+
+                    function nohead(x) { //no header if width is 768px
+                        if (x.matches) {
+                            th.style.display = "none";
+                        } else {
+                            th.style.display = "table-row";
+                        }
+                    }
+                    var x = window.matchMedia("(max-width: 980px)");
+                    nohead(x);
+                    x.addListener(nohead);
+
+                    for (let i = 0; i < rows["Result"].length; i++) {
+
+                        const tr = tbl.insertRow();
+
+                        console.log(rows);
+                        var uhandle = rows["Result"][i]["userhandle"]; //variable ith userhandle raw
+                        //console.log(uhandle);
+                        const td1 = tr.insertCell();
+                        var div1 = document.createElement("div");
+                        var par1 = document.createElement("P");
+                        par1.style.alignContent = "center";
+                        div1.style.maxHeight = "100px";
+                        div1.style.maxWidth = "500px";
+                        td1.style.border = '1px solid #fff';
+                        td1.style.overflowX = "auto";
+                        td1.style.Height = "100px";
+                        td1.style.Width = "100px";
+
+
+                        var btn1 = document.createElement('button'); //creating the button
+                        btn1.textContent = uhandle;
+                        //btn.style.backgroundColor = '#292c33'; //button style
+                        btn1.style.color = "#00aced";
+                        //btn.style.borderRadius = "10px";
+                        btn1.style.borderStyle = "none";
+                        btn1.style.fontSize = "16px";
+                        btn1.style.width = "180px";
+                        btn1.style.height = "70px";
+                        //btn1.style.backgroundColor = "transparent";
+                        btn1.style.overflow = "hidden";
+                        btn1.style.outline = "none";
+                        btn1.style.textDecoration = "underline";
+
+                        btn1.addEventListener("click", function() {
+                            rmv = rows["Result"][i]["userhandle"].replace('@', '');
+                            var userhandle_link = "https://twitter.com/" + rmv;
+                            //console.log(userhandle_link);
+                            window.open(userhandle_link, '_blank').focus();
+                        });
+                        div1.appendChild(par1);
+                        td1.appendChild(btn1);
+
+                        var galingDb = rows["Result"][i]["tweet"];
+                        let itoNa = "";
+
+
+                        function escapeHtml(galingDb) {
+                            return galingDb.replaceAll('*amp', '&').replaceAll('*lt', '<').replaceAll('*gt', '>').replaceAll('*dou', '"').replaceAll('*sin', "'").replaceAll('*ht', '#').replaceAll('*sl', '/').replaceAll('*bt', '`').replaceAll('*eq', '=').replaceAll('*per', '%').replaceAll('*pl', '+').replaceAll('*ds', '$');
+                        }
+
+                        itoNa = escapeHtml(galingDb);
+
+
+                        console.log(rows);
+                        const td2 = tr.insertCell();
+                        var div = document.createElement("div");
+                        var par = document.createElement("P");
+                        div.style.maxHeight = "100px";
+                        div.style.maxWidth = "800px";
+                        td2.style.border = '1px solid #fff';
+                        td2.style.overflowX = "auto";
+                        td2.style.maxHeight = "100px";
+                        td2.style.maxWidth = "800px";
+                        //td2.style.width = "10px";
+                        //td2.style.height = "10px";
+                        par.innerHTML = itoNa;
+                        div.appendChild(par);
+                        td2.appendChild(div);
+
+                        console.log(rows);
+                        const td3 = tr.insertCell();
+                        var div3 = document.createElement("div");
+                        var par3 = document.createElement("P");
+                        div3.style.maxHeight = "100px";
+                        div3.style.maxWidth = "700px";
+                        td3.style.border = '1px solid #fff';
+                        td3.style.overflowX = "auto";
+                        td3.style.Height = "100px";
+                        td3.style.Width = "100px";
+                        par3.innerHTML = rows["Result"][i]["uscore"];
+                        div3.appendChild(par3);
+                        td3.appendChild(div3);
+
+                        console.log(rows);
+                        const td4 = tr.insertCell();
+                        var div4 = document.createElement("div");
+                        var par4 = document.createElement("P");
+                        div4.style.maxHeight = "100px";
+                        div4.style.maxWidth = "450px";
+                        td4.style.border = '1px solid #fff';
+                        td4.style.overflowX = "auto";
+                        td4.style.Height = "100px";
+                        td4.style.Width = "50px";
+                        par4.innerHTML = rows["Result"][i]["geotag"];
+                        div4.appendChild(par4);
+                        td4.appendChild(div4);
+
+                        console.log(rows);
+                        const td5 = tr.insertCell();
+                        var div5 = document.createElement("div");
+                        var par5 = document.createElement("P");
+                        par5.style.alignContent = "center";
+                        div5.style.maxHeight = "80px";
+                        div5.style.maxWidth = "800px";
+                        td5.style.border = '1px solid #fff'; //cell style
+                        td5.style.width = "150px";
+                        td5.style.height = "100px";
+                        var btn = document.createElement('button'); //creating the button
+                        //var btn2 = document.createElement('button'); //creating the button
+                        //var btn3 = document.createElement('button'); //creating the button
+                        btn.textContent = "Go to the tweet?";
+                        btn.style.textDecoration = "underline";
+                        //btn.style.backgroundColor = '#ec3e3f'; //button style
+                        btn.style.color = "#00aced";
+                        //btn.style.borderRadius = "10px";
+                        btn.style.borderStyle = "none";
+                        btn.style.fontSize = "16px";
+                        btn.style.width = "180px";
+                        btn.style.height = "70px";
+                        btn.style.backgroundColor = "transparent";
+                        btn.style.overflow = "hidden";
+                        btn.style.outline = "none";
+                        //btn.style.paddingLeft = "2em";
+
+
+                        btn.addEventListener("click", function() {
+                            location = rows["Result"][i]["url"]; // Navigate to new page
+                            window.open(location, '_blank').focus();
+                        });
+
+                        function r(a) { //small phones
+                                            if (a.matches) {
+                                                btn.style.marginLeft = "1.7em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                        }
+                                        var a = window.matchMedia("(min-width: 320px) and (max-width: 480px)");
+                                        r(a);
+                                        a.addListener(r);
+
+                                        function re(b) { //ipad, tablets
+                                            if (b.matches) {
+                                                btn.style.marginLeft = "2.1em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                        }
+                                        function big(c) { //big sccreen 
+                                            if (c.matches) {
+                                                btn.style.marginLeft = "6em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                            
+                                        }
+                                        var c = window.matchMedia("(min-width: 768px) and (max-width: 980px)");
+                                        big(c);
+                                        c.addListener(big); 
+
+                                       
+                                        
+
+                        div5.appendChild(par5);
+                        td5.appendChild(btn);
+
+                        tbl.appendChild(tr);
+                    }
+                }
+                tableCreate();
+            });
+    </script>
+
+    <script type="text/javascript">
+        async function predictScore(procd_tweet, tweets, handle, geotag, tweet_link) { //prediction
+            let vocab = await fetch('./server/vocab.json');
+            let score;
+            let sequence;
+            let uScore;
+            vocab = await vocab.json();
+            vocab = JSON.parse(vocab['config']['word_index']);
+            console.log(vocab);
+
+            var entityMap = {
+                '&': '*amp',
+                '<': '*lt',
+                '>': '*gt',
+                '"': '*dou',
+                "'": '*sin',
+                "#": '*ht',
+                '/': '*sl',
+                '+': '*pl',
+                '$': '*ds',
+                '`': '*bt',
+                '=': '*eq',
+                '%': '*per'
+            };
+
+            function escapeHtml(tweets) {
+                return String(tweets).replace(/[&<>"'#`=\/]/g, function(tweets) {
+                    //console.log(entityMap[tweets] + " ito ba yun?");
+                    return entityMap[tweets];
+                });
+            }
+
+            //console.log(escapeHtml(tweets) + " baka ito");
+            let newTweet = escapeHtml(tweets);
+
+            try {
+                sequence = model.tokenize(procd_tweet, vocab);
+                score = await model.predict(sequence);
+                score = score.toString();
+                score = score.replace(/[\[\](Tensor)\n,]/g, "").trim();
+
+
+                //code for manipulating the uScore// 
+                MySql.Execute(
+                    "us-cdbr-east-04.cleardb.com",
+                    "b17582dc365975",
+                    "7ddc3c6c",
+                    "heroku_b63e0ce64f4651c",
+                    "select * from pstry order by uscore desc",
+
+                    "INSERT INTO pstry (userhandle, tweet, uscore, geotag, url) VALUES ('" + handle + "', '" + newTweet + "', '" + score + "', '" + geotag + "', '" + tweet_link + "')",
+                    function(data) {
+                        console.log(data);
+                        MySql.Execute(
+                            "us-cdbr-east-04.cleardb.com",
+                            "baaac8132f3592",
+                            "4aca28e6",
+                            "heroku_acd136012faa414",
+                            "select * from pstry order by uscore desc",
+
+                            function(data) {
+
+                                let rows = JSON.parse(JSON.stringify(data, null, 2));
+
+                                function tableCreate() {
+
+                                    $("#tibol").empty();
+                                    tbl = document.getElementById('tibol');
+                                    tbl.style.tableLayout = "fixed";
+
+                                    console.log(tbl);
+
+                                    console.log(rows["Result"].length);
+                                    console.log(rows["Result"]);
+                                    console.log(rows);
+                                    console.log(Object.values(rows).length);
+                                    const th = tbl.insertRow();
+
+                                    const th1 = th.insertCell();
+                                    th1.innerHTML = "User Handle";
+                                    th1.style.border = '1px solid #fff';
+                                    th1.style.backgroundColor = '#465a65';
+
+                                    const th2 = th.insertCell();
+                                    th2.innerHTML = "Tweet";
+                                    th2.style.border = '1px solid #fff';
+                                    th2.style.backgroundColor = '#465a65';
+
+                                    const th3 = th.insertCell();
+                                    th3.innerHTML = "Urgency Score";
+                                    th3.style.border = '1px solid #fff';
+                                    th3.style.backgroundColor = '#ec3e3f';
+
+                                    const th4 = th.insertCell();
+                                    th4.innerHTML = "Geotag Location";
+                                    th4.style.border = '1px solid #fff';
+                                    th4.style.backgroundColor = '#465a65';
+
+                                    const th5 = th.insertCell();
+                                    th5.innerHTML = "Tweet Link";
+                                    th5.style.border = '1px solid #fff';
+                                    th5.style.backgroundColor = '#465a65';
+
+                                    function nohead(x) { //no header if width is 768px
+                                        if (x.matches) {
+                                            th.style.display = "none";
+                                        }
+                                    }
+                                    var x = window.matchMedia("(max-width: 768px)");
+                                    nohead(x);
+                                    x.addListener(nohead);
+
+                                    for (let i = 0; i < rows["Result"].length; i++) {
+                                        const tr = tbl.insertRow();
+                                        console.log(rows);
+
+                                        const td1 = tr.insertCell();
+                                        var uhandle = rows["Result"][i]["userhandle"]; //variable ith userhandle raw
+                                        //console.log(uhandle);
+                                        var div1 = document.createElement("div");
+                                        var par1 = document.createElement("P");
+                                        par1.style.alignContent = "center";
+                                        div1.style.maxHeight = "100px";
+                                        div1.style.maxWidth = "500px";
+                                        td1.style.border = '1px solid #fff';
+                                        td1.style.overflowX = "auto";
+                                        td1.style.Height = "100px";
+                                        td1.style.Width = "100px";
+
+
+                                        var btn1 = document.createElement('button'); //creating the button
+                                        btn1.textContent = uhandle;
+                                        //btn.style.backgroundColor = '#292c33'; //button style
+                                        btn1.style.color = "#00aced";
+                                        //btn.style.borderRadius = "10px";
+                                        btn1.style.borderStyle = "none";
+                                        btn1.style.fontSize = "16px";
+                                        btn1.style.width = "180px";
+                                        btn1.style.height = "70px";
+                                        btn1.style.backgroundColor = "transparent";
+                                        btn1.style.overflow = "hidden";
+                                        btn1.style.outline = "none";
+                                        btn1.style.textDecoration = "underline";
+
+                                        btn1.addEventListener("click", function() {
+                                            rmv = rows["Result"][i]["userhandle"].replace('@', '');
+                                            var userhandle_link = "https://twitter.com/" + rmv;
+                                            //console.log(userhandle_link);
+                                            window.open(userhandle_link, '_blank').focus();
+                                        });
+                                        div1.appendChild(par1);
+                                        td1.appendChild(btn1);
+
+                                        var galingDb = rows["Result"][i]["tweet"];
+                                        let itoNa = "";
+
+
+                                        function escapeHtml(galingDb) {
+                                            return galingDb.replaceAll('*amp', '&').replaceAll('*lt', '<').replaceAll('*gt', '>').replaceAll('*dou', '"').replaceAll('*sin', "'").replaceAll('*ht', '#').replaceAll('*sl', '/').replaceAll('*bt', '`').replaceAll('*eq', '=').replaceAll('*per', '%').replaceAll('*pl', '+').replaceAll('*ds', '$');;
+                                        }
+
+                                        itoNa = escapeHtml(galingDb);
+
+                                        console.log(rows);
+                                        const td2 = tr.insertCell();
+                                        var div = document.createElement("div");
+                                        var par = document.createElement("P");
+                                        div.style.maxHeight = "100px";
+                                        div.style.maxWidth = "800px";
+                                        td2.style.border = '1px solid #fff';
+                                        td2.style.overflowX = "auto";
+                                        td2.style.maxHeight = "100px";
+                                        td2.style.maxWidth = "800px";
+                                        par.innerHTML = itoNa;
+                                        div.appendChild(par);
+                                        td2.appendChild(div);
+
+                                        console.log(rows);
+                                        const td3 = tr.insertCell();
+                                        var div3 = document.createElement("div");
+                                        var par3 = document.createElement("P");
+                                        div3.style.maxHeight = "100px";
+                                        div3.style.maxWidth = "700px";
+                                        td3.style.border = '1px solid #fff';
+                                        td3.style.overflowX = "auto";
+                                        td3.style.Height = "100px";
+                                        td3.style.Width = "100px";
+                                        par3.innerHTML = rows["Result"][i]["uscore"];
+                                        div3.appendChild(par3);
+                                        td3.appendChild(div3);
+
+
+                                        console.log(rows);
+                                        const td4 = tr.insertCell();
+                                        var div4 = document.createElement("div");
+                                        var par4 = document.createElement("P");
+                                        div4.style.maxHeight = "100px";
+                                        div4.style.maxWidth = "450px";
+                                        td4.style.border = '1px solid #fff';
+                                        td4.style.overflowX = "auto";
+                                        td4.style.Height = "100px";
+                                        td4.style.Width = "50px";
+                                        par4.innerHTML = rows["Result"][i]["geotag"];
+                                        div4.appendChild(par4);
+                                        td4.appendChild(div4);
+
+                                        //tweet link
+
+                                        console.log(rows);
+                                        const td5 = tr.insertCell();
+                                        var div5 = document.createElement("div");
+                                        var par5 = document.createElement("P");
+                                        par5.style.alignContent = "center";
+                                        div5.style.maxHeight = "80px";
+                                        div5.style.maxWidth = "800px";
+                                        td5.style.border = '1px solid #fff'; //cell style
+                                        td5.style.width = "150px";
+                                        td5.style.height = "100px";
+                                        var btn = document.createElement('button'); //creating the button
+                                        btn.textContent = "Go to the tweet?";
+                                        btn.style.textDecoration = "underline";
+                                        //btn.style.backgroundColor = '#ec3e3f'; //button style
+                                        btn.style.color = "#00aced";
+                                        //btn.style.borderRadius = "10px";
+                                        btn.style.borderStyle = "none";
+                                        btn.style.fontSize = "16px";
+                                        btn.style.width = "180px";
+                                        btn.style.height = "70px";
+                                        btn.style.backgroundColor = "transparent";
+                                        btn.style.overflow = "hidden";
+                                        btn.style.outline = "none";
+
+                                        //btn.style.paddingLeft = "2em";
+
+                                        btn.addEventListener("click", function() {
+                                            location = rows["Result"][i]["url"]; // Navigate to new page
+                                            window.open(location, '_blank').focus();
+                                        });
+
+                                        function r(a) { //small phones
+                                            if (a.matches) {
+                                                btn.style.marginLeft = "1.7em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                        }
+                                        var a = window.matchMedia("(min-width: 320px) and (max-width: 480px)");
+                                        r(a);
+                                        a.addListener(r);
+
+                                        function re(b) { //ipad, tablets
+                                            if (b.matches) {
+                                                btn.style.marginLeft = "2.1em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                        }
+                                        function big(c) { //big sccreen 
+                                            if (c.matches) {
+                                                btn.style.marginLeft = "6em";
+                                            } else {
+                                                btn.style.marginLeft = "0em";
+                                            }
+                                            
+                                        }
+                                        var c = window.matchMedia("(min-width: 768px) and (max-width: 980px)");
+                                        big(c);
+                                        c.addListener(big); 
+
+
+                                        div5.appendChild(par5);
+                                        td5.appendChild(btn);
+
+
+                                        tbl.appendChild(tr);
+
+                                    }
+                                }
+                                tableCreate();
+                            });
+                    })
+                createCookie("score", score, "10");
+                console.log(score);
+
+                console.log(uScore);
+                console.log(score);
+            } catch (e) {
+                //document.getElementById('output_field').innerText = e;
+                console.log(e);
+            }
+            return uScore;
+        }
+
+        function preprocess(tweet) {
+            let preprocd = tweet;
+            preprocd = remove_handle(preprocd);
+            console.log(preprocd);
+            preprocd = remove_links(preprocd);
+            console.log(preprocd);
+            preprocd = remove_punc(preprocd);
+            console.log(preprocd);
+            preprocd = retain_alpha_hashtag(preprocd);
+            console.log(preprocd);
+            preprocd = remove_hashtags(preprocd);
+            console.log(preprocd);
+            preprocd = remove_extra_spaces(preprocd);
+            console.log(preprocd);
+            preprocd = preprocd.toLowerCase();
+            console.log(preprocd);
+            return preprocd;
+        }
+
+        function createCookie(name, value, days) {
+            var expires;
+
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            } else {
+                expires = "";
+            }
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+    </script>
+
+    <script>
+        const socket = io()
+
+        socket.on('connect', () => {
+            console.log('Connected to server...')
+        })
+
+        socket.on('tweet', (tweet) => {
+            console.log(tweet);
+            var gtag = true;
+            var tweetData;
+            try {
+                tweetData = {
+                    id: tweet.data.id,
+                    text: tweet.data.text,
+                    username: `@${tweet.includes.users[0].username}`,
+                    geo: `@${tweet.includes.places[0].full_name}`, //itry to mamaya sa tweet na may geotag
+                }
+            } catch (error) {
+                tweetData = {
+                    id: tweet.data.id,
+                    text: tweet.data.text,
+                    username: `@${tweet.includes.users[0].username}`,
+                }
+                gtag = false
+            }
+
+            let tweets = `${tweetData.text}`;
+            let handle = `${tweetData.username}`;
+            let tweet_link = "https://twitter.com/i/web/status/" + `${tweetData.id}`;
+            let geotag;
+            if (gtag) {
+                geotag = `${tweetData.geo}`;
+            } else {
+                geotag = "no geotag";
+            }
+            console.log(geotag);
+
+            createCookie("tweet", tweets, "10");
+            predictScore(preprocess(tweets), tweets, handle, geotag, tweet_link);
+        })
+    </script>
+</body>
+
+</html>
